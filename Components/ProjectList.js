@@ -2,11 +2,14 @@ import { StyleSheet, View, Text, Pressable } from "react-native";
 
 function ProjectList({ itemText, handelDeleteProject }) {
   return (
-    <Pressable onPress={handelDeleteProject}>
-      <View style={styles.listItem}>
+    <View style={styles.listItem}>
+      <Pressable
+        android_ripple={{ color: "#C4C4C4" }}
+        onPress={handelDeleteProject.bind(this, itemText.id)}
+      >
         <Text style={styles.itemText}>{itemText.text}</Text>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 }
 
@@ -17,10 +20,10 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: 7,
     backgroundColor: "gray",
-    padding: 5,
     borderRadius: 5,
   },
   itemText: {
     color: "white",
+    padding: 5,
   },
 });
