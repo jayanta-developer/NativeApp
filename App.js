@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button, FlatList, Modal } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  FlatList,
+  Modal,
+  ImageBackground,
+} from "react-native";
 
 //components
 import ProjectList from "./Components/ProjectList";
@@ -17,6 +25,7 @@ export default function App() {
       { text: projectText, id: Math.random().toString() },
     ]);
     setProjectText("");
+    setInputBox(false);
   };
 
   const handelDeleteProject = (id) => {
@@ -24,49 +33,67 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <Button
-        title="Add New Project"
-        color="blue"
-        onPress={() => setInputBox(true)}
-      />
-      <Modal visible={inputBox}>
-        <View style={styles.inputBox}>
-          <ProjectInput
-            projectText={projectText}
-            setProjectText={setProjectText}
-          />
-          <View style={styles.appBtnBox}>
-            <Button onPress={handelBtnPress} title="Add Project" />
-            <Button title="Cancel" />
+    <>
+      <StatusBar style="light" />
+      <ImageBackground
+        style={styles.backgroundImg}
+        source={require("./assets/Images/pexels-cottonbro-studio-4604566.jpg")}
+      >
+        <View style={styles.container}>
+          <View style={styles.addBtnBox}>
+            <Button
+              title="Add New Project"
+              color="#218DEB"
+              onPress={() => setInputBox(true)}
+            />
+          </View>
+          <Modal visible={inputBox} animationType="slide">
+            <View style={styles.inputBox}>
+              <ProjectInput
+                projectText={projectText}
+                setProjectText={setProjectText}
+              />
+              <View style={styles.appBtnBox}>
+                <Button onPress={() => setInputBox(false)} title="Cancel" />
+                <Button onPress={handelBtnPress} title="Add Project" />
+              </View>
+            </View>
+          </Modal>
+          <View style={styles.listBox}>
+            <FlatList
+              data={projectList}
+              renderItem={({ item }) => {
+                return (
+                  <ProjectList
+                    itemText={item}
+                    handelDeleteProject={handelDeleteProject}
+                  />
+                );
+              }}
+              keyExtractor={(item) => item.id}
+            />
           </View>
         </View>
-      </Modal>
-      <View style={styles.listBox}>
-        <FlatList
-          data={projectList}
-          renderItem={({ item }) => {
-            return (
-              <ProjectList
-                itemText={item}
-                handelDeleteProject={handelDeleteProject}
-              />
-            );
-          }}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
-    </View>
+      </ImageBackground>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
     padding: 20,
+    paddingTop: 40,
     flexDirection: "column",
     alignItems: "flex-start",
+  },
+  backgroundImg: {
+    flex: 1,
+  },
+  addBtnBox: {
+    width: "100%",
+    justifyContent: "center",
+    // alignItems: "center",
   },
   inputBox: {
     flex: 1,
@@ -74,19 +101,20 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "gray",
     paddingBottom: 10,
     marginBottom: 20,
   },
   appBtnBox: {
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
+    marginTop: 20,
   },
 
   listBox: {
     flex: 9,
     width: "100%",
     flexDirection: "column",
+    marginTop: 20,
   },
 });
